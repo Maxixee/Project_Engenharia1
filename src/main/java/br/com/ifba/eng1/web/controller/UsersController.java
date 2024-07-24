@@ -1,5 +1,6 @@
 package br.com.ifba.eng1.web.controller;
 
+import br.com.ifba.eng1.domain.dto.AuthDto;
 import br.com.ifba.eng1.domain.dto.PageableDto;
 import br.com.ifba.eng1.domain.dto.UsersCreateDto;
 import br.com.ifba.eng1.domain.dto.UsersResponseDto;
@@ -55,5 +56,10 @@ public class UsersController {
     public ResponseEntity<String> delete(@PathVariable Long id) {
         usersService.delete(id);
         return ResponseEntity.ok("User deleted");
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<AuthDto> auth(@RequestBody AuthDto user){
+        return ResponseEntity.ok(this.usersService.auth(user));
     }
 }

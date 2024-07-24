@@ -13,6 +13,7 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     @Query("select c from Users c")
     Page<UsersProjection> findAllPageable(Pageable pageable);
+    Optional<Users> findByName(String name);
 
-    public Optional<Users> findByName(String name);
+    Optional<Users> findByEmail(String email);
 }
