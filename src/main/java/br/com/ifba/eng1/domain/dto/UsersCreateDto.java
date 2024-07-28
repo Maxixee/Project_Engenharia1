@@ -2,6 +2,8 @@ package br.com.ifba.eng1.domain.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -11,4 +13,6 @@ public class UsersCreateDto {
     private String lastName;
     private String email;
     private String password;
+    private LocalDate birthDate;
+    private String cellphoneNumber;
 }

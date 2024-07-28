@@ -3,6 +3,8 @@ package br.com.ifba.eng1.domain.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Builder(toBuilder = true)
@@ -28,4 +30,10 @@ public class Users {
 
     @Column( name = "password", nullable = false )
     private String password;
+
+    @Column( name = "birth", nullable = false )
+    private LocalDate birthDate;
+
+    @Column( name = "cellphoneNumber", nullable = false )
+    private String cellphoneNumber;
 }
