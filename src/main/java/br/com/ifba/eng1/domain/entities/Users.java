@@ -36,4 +36,7 @@ public class Users {
 
     @Column( name = "cellphoneNumber", nullable = false )
     private String cellphoneNumber;
+    
+    @Column(name = "passwordResetToken")
+    private String passwordResetToken;
 }

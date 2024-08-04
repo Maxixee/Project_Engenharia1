@@ -27,7 +27,8 @@ public class ServerSecurityConfig {
                 .authorizeHttpRequests(authorize->authorize.requestMatchers("/users/auth", "/users/save", "/api/auth/**",
                         "/v3/api-docs/**",
                         "/v2/api-docs.yaml",
-                        "/swagger-ui/**", "/swagger-ui.html").permitAll())
+                        "/swagger-ui/**", "/swagger-ui.html",
+                        "/resetPassword").permitAll())
                 .authorizeHttpRequests(authorize->authorize.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .build();
