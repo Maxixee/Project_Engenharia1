@@ -24,7 +24,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Projects")
+@Table(name = "Project")
 public class Project {
     
     @Id
@@ -35,6 +35,7 @@ public class Project {
     @Column( name = "name", nullable = false )
     private String name;
 
-    
-    
+    @Column(name = "description", nullable = false)
+    private String description;
+
 }

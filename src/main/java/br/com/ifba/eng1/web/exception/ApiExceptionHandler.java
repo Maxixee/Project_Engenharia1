@@ -1,9 +1,6 @@
 package br.com.ifba.eng1.web.exception;
 
-import br.com.ifba.eng1.domain.exception.EntityNotFoundException;
-import br.com.ifba.eng1.domain.exception.InvalidRegistrationInformationException;
-import br.com.ifba.eng1.domain.exception.UserAlreadyExistsException;
-import br.com.ifba.eng1.domain.exception.UsernameNotFoundException;
+import br.com.ifba.eng1.domain.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,7 +23,7 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ExceptionHandler({UserAlreadyExistsException.class, ProjectAlreadyExistsException.class})
     public ResponseEntity<ErrorMessage> characterAlreadyExistsException(RuntimeException ex, HttpServletRequest request) {
         log.error("API Error - ", ex);
         return ResponseEntity
