@@ -5,7 +5,7 @@
 package br.com.ifba.eng1.domain.repository;
 
 import br.com.ifba.eng1.domain.entities.Project;
-import br.com.ifba.eng1.domain.repository.projection.ProjectProjection;
+import br.com.ifba.eng1.domain.repository.projection.TasksProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,6 +22,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
     Optional<Project> findByName(String name);
 
     @Query("select c from Project c")
-    Page<ProjectProjection> findAllPageable(Pageable pageable);
+    Page<TasksProjection> findAllPageable(Pageable pageable);
     
 }
