@@ -36,7 +36,7 @@ public class UsersService implements UserDetailsService {
     @Transactional(propagation = Propagation.REQUIRED)
     public Users save(Users user){
 
-        Optional<Users> usersOptional = this.usersRepository.findByName(user.getName());
+        Optional<Users> usersOptional = this.usersRepository.findByEmail(user.getEmail());
         if(usersOptional.isPresent()){
             throw new UserAlreadyExistsException("User already exists");
         }
