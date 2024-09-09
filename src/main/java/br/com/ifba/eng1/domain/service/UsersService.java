@@ -89,7 +89,7 @@ public class UsersService implements UserDetailsService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(Long id) {
-        Users user = this.findById(id);// Reutiliza o método findById para verificar se o personagem existe
+        Users user = this.findById(id);
         this.usersRepository.delete(user);
         log.info("Deleting user id={}: {}", id, user);
     }

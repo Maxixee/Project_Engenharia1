@@ -55,8 +55,7 @@ public class InviteService {
     }
 
     public void acceptInvite(Long inviteId) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) auth.getPrincipal();
+        String email = getEmailByContext();
         Users authUser = usersRepo.findByEmail(email).orElseThrow(()
                 -> new EntityNotFoundException("User not found"));
 
@@ -80,8 +79,7 @@ public class InviteService {
     }
 
     public void refuseInvite(Long inviteId) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) auth.getPrincipal();
+        String email = getEmailByContext();
         Users authUser = usersRepo.findByEmail(email).orElseThrow(()
                 -> new EntityNotFoundException("User not found"));
 
@@ -105,8 +103,7 @@ public class InviteService {
     }
 
     public List<Invite> findAllById() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) auth.getPrincipal();
+        String email = getEmailByContext();
         Users authUser = usersRepo.findByEmail(email).orElseThrow(()
                 -> new EntityNotFoundException("User not found"));
 
@@ -119,4 +116,7 @@ public class InviteService {
         }
     }
 
+    public String getEmailByContext(){
+        return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 }
