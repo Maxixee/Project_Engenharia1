@@ -4,8 +4,8 @@
  */
 package br.com.ifba.eng1.web.controller;
 
-import br.com.ifba.eng1.domain.dto.SendInviteDTO;
-import br.com.ifba.eng1.domain.entities.Invite;
+import br.com.ifba.eng1.domain.dto.InviteCreateDTO;
+import br.com.ifba.eng1.domain.dto.InviteViewDTO;
 import br.com.ifba.eng1.domain.service.InviteService;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
@@ -33,8 +33,8 @@ public class InviteController {
     private final InviteService inviteService;
     
     @PostMapping("/invite")
-    public ResponseEntity<Invite> inviteGuest(@RequestBody SendInviteDTO data){
-        Invite invite = inviteService.inviteUser(data);
+    public ResponseEntity<InviteViewDTO> inviteGuest(@RequestBody InviteCreateDTO data){
+        InviteViewDTO invite = inviteService.inviteUser(data);
         
         return ResponseEntity.ok(invite);
     }
@@ -60,8 +60,8 @@ public class InviteController {
     }
     
     @GetMapping("/my-invites")
-    public ResponseEntity<List<Invite>> findMyInvites(){
-        List<Invite> myInvites = this.inviteService.findAllById();
+    public ResponseEntity<List<InviteViewDTO>> findMyInvites(){
+        List<InviteViewDTO> myInvites = this.inviteService.findAllById();
         try {
             return ResponseEntity.ok(myInvites);
         } catch (Exception e) {

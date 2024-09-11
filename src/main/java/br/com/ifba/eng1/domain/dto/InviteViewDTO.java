@@ -4,6 +4,7 @@
  */
 package br.com.ifba.eng1.domain.dto;
 
+import br.com.ifba.eng1.domain.entities.Invite.InviteStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendInviteDTO {
-    Long projectId;
-    Long guestId;
-    Long senderId;
+public class InviteViewDTO {
+
+    private Long id;
+    private Long guestId;
+    private String guestName;
+    private Long senderId;
+    private String senderName;
+    private Long projectId;
+    private String projectName;
+    private InviteStatus status;
 }

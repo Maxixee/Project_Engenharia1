@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,4 +41,7 @@ public class Users {
     
     @Column(name = "passwordResetToken")
     private String passwordResetToken;
+    
+    @ManyToMany(mappedBy="members")
+    private List<Project> projects = new ArrayList<>();
 }

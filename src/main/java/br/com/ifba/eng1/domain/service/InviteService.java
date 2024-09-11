@@ -5,7 +5,9 @@
 package br.com.ifba.eng1.domain.service;
 
 import java.util.List;
-import br.com.ifba.eng1.domain.dto.SendInviteDTO;
+import br.com.ifba.eng1.domain.dto.InviteCreateDTO;
+import br.com.ifba.eng1.domain.dto.InviteViewDTO;
+import br.com.ifba.eng1.domain.dto.mapper.InviteMapper;
 import br.com.ifba.eng1.domain.entities.Invite;
 import br.com.ifba.eng1.domain.entities.Project;
 import br.com.ifba.eng1.domain.entities.Users;
@@ -13,10 +15,11 @@ import br.com.ifba.eng1.domain.exception.EntityNotFoundException;
 import br.com.ifba.eng1.domain.repository.InviteRepository;
 import br.com.ifba.eng1.domain.repository.ProjectRepository;
 import br.com.ifba.eng1.domain.repository.UsersRepository;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 
 /**
  *
@@ -29,8 +32,8 @@ public class InviteService {
     private final InviteRepository inviteRepo;
     private final UsersRepository usersRepo;
     private final ProjectRepository projectRepo;
-
-    public Invite inviteUser(SendInviteDTO data) {
+    
+    public InviteViewDTO inviteUser(InviteCreateDTO data) {
         Users sender = usersRepo.findById(data.getSenderId()).orElseThrow(()
                 -> new EntityNotFoundException("Sender not found"));
 
@@ -48,7 +51,8 @@ public class InviteService {
         newInvite.setStatus(Invite.InviteStatus.PENDING);
 
         try {
-            return inviteRepo.save(newInvite);
+            inviteRepo.save(newInvite);
+            return InviteMapper.toDTO(newInvite);
         } catch (Exception e) {
             throw e;
         }
@@ -69,7 +73,7 @@ public class InviteService {
         }
 
         invite.setStatus(Invite.InviteStatus.ACCEPTED);
-        //invite.getProject().getMembers().add(invite.getGuest()); project currently doesnt have list of members???
+        invite.getProject().getMembers().add(invite.getGuest());
 
         try {
             inviteRepo.save(invite);
@@ -93,7 +97,6 @@ public class InviteService {
         }
 
         invite.setStatus(Invite.InviteStatus.REFUSED);
-        //invite.getProject().getMembers().add(invite.getGuest()); project currently doesnt have list of members???
 
         try {
             inviteRepo.save(invite);
@@ -102,7 +105,7 @@ public class InviteService {
         }
     }
 
-    public List<Invite> findAllById() {
+    public List<InviteViewDTO> findAllById() {
         String email = getEmailByContext();
         Users authUser = usersRepo.findByEmail(email).orElseThrow(()
                 -> new EntityNotFoundException("User not found"));
@@ -110,7 +113,10 @@ public class InviteService {
         Long guestId = authUser.getId();
 
         try {
-            return inviteRepo.findByGuestId(guestId);
+            List<Invite> invites = inviteRepo.findByGuestId(guestId);
+            return invites.stream()
+                .map(InviteMapper::toDTO) // Utiliza o método toDTO do InviteMapper
+                .collect(Collectors.toList());
         } catch (Exception e) {
             throw e;
         }
