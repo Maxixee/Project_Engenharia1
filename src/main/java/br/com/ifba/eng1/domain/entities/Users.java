@@ -44,4 +44,7 @@ public class Users {
     
     @ManyToMany(mappedBy="members")
     private List<Project> projects = new ArrayList<>();
+
+    @OneToMany(mappedBy = "manager")
+    private List<Project> managedProjects = new ArrayList<>();
 }

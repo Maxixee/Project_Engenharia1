@@ -122,7 +122,7 @@ public class InviteService {
         }
     }
 
-    public String getEmailByContext(){
+    private String getEmailByContext(){
         return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

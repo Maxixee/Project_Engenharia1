@@ -27,6 +27,10 @@ public class Tasks {
     private String priority;
 
     @ManyToOne
-    @JoinColumn(name = "inCharge_id", referencedColumnName = "Id",nullable = false )
+    @JoinColumn(name = "inCharge_id", referencedColumnName = "Id", nullable = false)
     private Users inCharge;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 }

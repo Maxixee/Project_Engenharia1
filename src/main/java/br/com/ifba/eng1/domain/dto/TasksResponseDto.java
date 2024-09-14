@@ -1,6 +1,7 @@
 package br.com.ifba.eng1.domain.dto;
 
 
+import br.com.ifba.eng1.domain.entities.Project;
 import br.com.ifba.eng1.domain.entities.Users;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,4 +16,5 @@ public class TasksResponseDto {
     private String description;
     private String priority;
     private Users inCharge;
+    private Project project;
 }
