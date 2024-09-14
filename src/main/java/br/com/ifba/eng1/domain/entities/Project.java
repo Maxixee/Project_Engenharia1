@@ -4,13 +4,8 @@
  */
 package br.com.ifba.eng1.domain.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -41,6 +36,13 @@ public class Project {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "manager_id", nullable = false)
+    private Users manager;
+
     @ManyToMany
     private List<Users> members = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project")
+    private List<Tasks> tasks = new ArrayList<>();
 }

@@ -16,7 +16,7 @@ import java.time.Instant;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(InvalidRegistrationInformationException.class)
+    @ExceptionHandler({InvalidRegistrationInformationException.class, UnauthorizedActionException.class})
     public ResponseEntity<ErrorMessage> invalidRegistrationInformationException(RuntimeException ex, HttpServletRequest request) {
         log.error("Api Error - ", ex);
         return ResponseEntity
