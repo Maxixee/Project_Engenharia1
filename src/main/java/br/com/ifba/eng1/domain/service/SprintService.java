@@ -9,12 +9,14 @@ import br.com.ifba.eng1.domain.exception.ResourceNotFoundException;
 import br.com.ifba.eng1.domain.repository.ProjectRepository;
 import br.com.ifba.eng1.domain.repository.SprintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class SprintService {
 
     @Autowired
