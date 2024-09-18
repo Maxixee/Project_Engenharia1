@@ -6,8 +6,12 @@ package br.com.ifba.eng1.web.controller;
 
 import br.com.ifba.eng1.domain.dto.TeamCreateDTO;
 import br.com.ifba.eng1.domain.dto.TeamResponseDTO;
+import br.com.ifba.eng1.domain.entities.Roles;
 import br.com.ifba.eng1.domain.entities.Team;
+import br.com.ifba.eng1.domain.entities.Users;
+import br.com.ifba.eng1.domain.service.ProjectService;
 import br.com.ifba.eng1.domain.service.TeamService;
+import br.com.ifba.eng1.domain.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +43,8 @@ public class TeamController {
     
     @Autowired
     private TeamService service;
+    private final ProjectService projectService;
+    private final UsersService usersService;
     
     @PostMapping("/save")
     public ResponseEntity<TeamResponseDTO> save(@RequestBody TeamCreateDTO dto){
@@ -65,5 +72,20 @@ public class TeamController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "name"));
         
         return service.geAllTeams(pageable);
+    }
+
+    @PostMapping("/{projectId}/members/{memberId}/roles")
+    public ResponseEntity<Roles> assignRoleToMember(
+            @PathVariable Long projectId,
+            @PathVariable Long memberId,
+            @RequestParam Long roleId
+    ) {
+
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Users requestingUser = usersService.findByEmail(email);
+        Long requestingUserId = requestingUser.getId();
+
+        Roles assignedRole = projectService.assignRoleToMember(projectId, memberId, requestingUserId, roleId);
+        return ResponseEntity.ok(assignedRole);
     }
 }

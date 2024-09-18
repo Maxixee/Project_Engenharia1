@@ -125,4 +125,29 @@ public class InviteService {
     private String getEmailByContext(){
         return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
+
+    /**
+     * Verifica o status de um convite de acordo com o ID do convite.
+     *
+     * @param inviteId ID do convite a ser verificado
+     * @return Status do convite (aceito, recusado, pendente, etc.)
+     */
+    public String checkInviteStatus(Long inviteId) {
+        String email = getEmailByContext();
+
+        Users authUser = usersRepo.findByEmail(email).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado"));
+
+        Long guestId = authUser.getId();
+
+        Invite invite = inviteRepo.findById(inviteId).orElseThrow(
+                () -> new RuntimeException("Convite não encontrado"));
+
+        if (!invite.getGuest().getId().equals(guestId)) {
+            throw new RuntimeException("Este convite não pertence ao usuário autenticado");
+        }
+
+        return invite.getStatus().name();
+    }
 }

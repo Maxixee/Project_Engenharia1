@@ -1,6 +1,7 @@
 package br.com.ifba.eng1.domain.service;
 
 import br.com.ifba.eng1.domain.entities.Project;
+import br.com.ifba.eng1.domain.entities.Roles;
 import br.com.ifba.eng1.domain.entities.Tasks;
 import br.com.ifba.eng1.domain.entities.Users;
 import br.com.ifba.eng1.domain.exception.EntityNotFoundException;
@@ -8,6 +9,7 @@ import br.com.ifba.eng1.domain.exception.InvalidRegistrationInformationException
 import br.com.ifba.eng1.domain.exception.ProjectAlreadyExistsException;
 import br.com.ifba.eng1.domain.exception.UnauthorizedActionException;
 import br.com.ifba.eng1.domain.repository.ProjectRepository;
+import br.com.ifba.eng1.domain.repository.RolesRepository;
 import br.com.ifba.eng1.domain.repository.TasksRepository;
 import br.com.ifba.eng1.domain.repository.UsersRepository;
 import br.com.ifba.eng1.domain.repository.projection.ProjectProjection;
@@ -30,7 +32,9 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final TasksRepository tasksRepository;
+    private final RolesRepository rolesRepository;
     private final UsersService usersService;
+    private final RolesService rolesService;
 
     @Transactional(propagation = Propagation.REQUIRED)
     public Project save(Project project){
@@ -100,4 +104,42 @@ public class ProjectService {
         log.info("Assigning task '{}' to user '{}' in project '{}'", task.getDescription(), user.getName(), project.getName());
         return tasksRepository.save(task);
     }
+
+    /**
+     * Atribui um papel a um membro da equipe.
+     *
+     * @param projectId ID do projeto
+     * @param userId ID do usuário que receberá o papel
+     * @param roleId ID do papel a ser atribuído
+     * @param requestingUserId ID do usuário que está solicitando a atribuição do papel
+     * @return O papel atribuído
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Roles assignRoleToMember(Long projectId, Long userId, Long roleId, Long requestingUserId) {
+        // Recupera o projeto e os usuários envolvidos
+        Project project = this.findById(projectId);
+        Users user = usersService.findById(userId);
+        Users requestingUser = usersService.findById(requestingUserId);
+        Roles role = rolesService.findById(roleId);
+
+        // Verifica se o usuário que está solicitando a atribuição do papel é o gerente do projeto
+        if (!project.getManager().getId().equals(requestingUser.getId())) {
+            throw new UnauthorizedActionException("Apenas o gerente do projeto pode atribuir papéis.");
+        }
+
+        // Verifica se o usuário que receberá o papel é membro do projeto
+        if (!project.getMembers().contains(user)) {
+            throw new IllegalArgumentException("O usuário não é membro do projeto");
+        }
+
+        // Atribui o papel ao usuário e ao projeto
+        user.getRoles().add(role);
+        role.getUsers().add(user);
+
+        // Registra a atribuição do papel no log
+        log.info("Atribuindo papel '{}' ao usuário '{}' no projeto '{}'", role.getName(), user.getName(), project.getName());
+        return rolesRepository.save(role);
+    }
+
+
 }

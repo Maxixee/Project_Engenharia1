@@ -47,4 +47,12 @@ public class Users {
 
     @OneToMany(mappedBy = "manager")
     private List<Project> managedProjects = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Roles> roles = new ArrayList<>();
 }
