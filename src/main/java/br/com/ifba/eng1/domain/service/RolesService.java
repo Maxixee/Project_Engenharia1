@@ -36,4 +36,8 @@ public class RolesService {
         this.rolesRepository.delete(role);
         log.info("Deleting role id= {} : {}", id, role);
     }
+
+    public Iterable<Roles> findAll() {
+        return this.rolesRepository.findAll();
+    }
 }

@@ -4,8 +4,10 @@
  */
 package br.com.ifba.eng1.web.controller;
 
+import br.com.ifba.eng1.domain.dto.RolesResponseDTO;
 import br.com.ifba.eng1.domain.dto.TeamCreateDTO;
 import br.com.ifba.eng1.domain.dto.TeamResponseDTO;
+import br.com.ifba.eng1.domain.dto.mapper.RolesMapper;
 import br.com.ifba.eng1.domain.entities.Roles;
 import br.com.ifba.eng1.domain.entities.Team;
 import br.com.ifba.eng1.domain.entities.Users;
@@ -45,6 +47,7 @@ public class TeamController {
     private TeamService service;
     private final ProjectService projectService;
     private final UsersService usersService;
+    private final RolesMapper rolesMapper;
     
     @PostMapping("/save")
     public ResponseEntity<TeamResponseDTO> save(@RequestBody TeamCreateDTO dto){
@@ -75,17 +78,19 @@ public class TeamController {
     }
 
     @PostMapping("/{projectId}/members/{memberId}/roles")
-    public ResponseEntity<Roles> assignRoleToMember(
+    public ResponseEntity<RolesResponseDTO> assignRoleToMember(
             @PathVariable Long projectId,
             @PathVariable Long memberId,
             @RequestParam Long roleId
     ) {
-
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Users requestingUser = usersService.findByEmail(email);
         Long requestingUserId = requestingUser.getId();
 
         Roles assignedRole = projectService.assignRoleToMember(projectId, memberId, requestingUserId, roleId);
-        return ResponseEntity.ok(assignedRole);
+
+        RolesResponseDTO responseDTO = RolesMapper.toDTO(assignedRole);
+
+        return ResponseEntity.ok(responseDTO);
     }
 }
