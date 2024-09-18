@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -62,5 +63,11 @@ public class UsersController {
     @PostMapping("/auth")
     public ResponseEntity<AuthDto> auth(@RequestBody AuthDto user){
         return ResponseEntity.ok(this.usersService.auth(user));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<Users> getCurrentUser() {
+        Users user = usersService.findAllByEmail();
+        return ResponseEntity.ok(user);
     }
 }

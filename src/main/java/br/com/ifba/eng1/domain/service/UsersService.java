@@ -1,6 +1,7 @@
 package br.com.ifba.eng1.domain.service;
 
 import br.com.ifba.eng1.domain.dto.AuthDto;
+import br.com.ifba.eng1.domain.dto.InviteViewDTO;
 import br.com.ifba.eng1.domain.entities.Users;
 import br.com.ifba.eng1.domain.exception.EntityNotFoundException;
 import br.com.ifba.eng1.domain.exception.InvalidRegistrationInformationException;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -114,5 +117,15 @@ public class UsersService implements UserDetailsService {
 
         return usersOptional.map(users -> new User(users.getEmail(), users.getPassword(), new ArrayList<GrantedAuthority>()))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
+    }
+
+    public Users findAllByEmail() {
+        String email = getEmailByContext();
+        return usersRepository.findByEmail(email).orElseThrow(() ->
+                new EntityNotFoundException("User not found"));
+    }
+
+    private String getEmailByContext(){
+        return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
